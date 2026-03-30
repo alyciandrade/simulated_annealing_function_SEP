@@ -1,0 +1,12 @@
+IEEE 6-bus optimal adjustments:
+
+Losses: 7.8710
+
+Voltage magnitudes:
+   1          1.1000   0.080000
+   2          1.1000   0.070000
+   3          1.1000   0.090000
+
+Shunt susceptances:
+
+Tap ratios:
