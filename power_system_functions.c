@@ -19,7 +19,7 @@ struct power_system_data
     int nAdjustments;
     adjustment *adjustments;
     double *fitness;
-    // fazer o vetor de contagem
+    unsigned long *visit_count;  
 };
 
 struct power_system_data *data_ps = NULL;
@@ -39,7 +39,8 @@ int power_system_init(char *filename, struct power_system_data **data)
     data_ps->param.maximumNumberIterations = 20;
 
     data_ps->adjustments = optimal_reactive_adjustments(data_ps->sep, &(data_ps->nAdjustments));
-    data_ps->fitness = (double *)calloc((int)(pow(2, data_ps->nAdjustments)), sizeof(double)); // copiar essa linha pq ele aloca o vetor de contagem
+    data_ps->fitness = (double *)calloc((int)(pow(2, data_ps->nAdjustments)), sizeof(double));
+    data_ps->visit_count = NULL;  // começa desativado
 
     assert(data_ps->fitness != NULL);
 
@@ -51,8 +52,40 @@ void power_system_free(void)
     free_Adjustments(data_ps->adjustments);
     free_EPS(data_ps->sep);
     free(data_ps->fitness);
+    free(data_ps->visit_count);
     free(data_ps);
     data_ps = NULL;
+}
+
+void ps_set_count_visits(int count_visits)
+{
+    if (count_visits)
+    {
+        free(data_ps->visit_count);
+        data_ps->visit_count = (unsigned long *)calloc(
+            (int)(pow(2, data_ps->nAdjustments)), sizeof(unsigned long));
+        assert(data_ps->visit_count != NULL);
+    }
+    else
+    {
+        free(data_ps->visit_count);
+        data_ps->visit_count = NULL;
+    }
+}
+
+int ps_count_visited_states(void)
+{
+    if (data_ps->visit_count == NULL)
+        return -1;
+
+    int visited = 0;
+    int total = (int)(pow(2, data_ps->nAdjustments));
+    for (int i = 0; i < total; i++)
+    {
+        if (data_ps->visit_count[i] > 0)
+            visited++;
+    }
+    return visited;
 }
 
 static void applyAdjustment(barra barras[], ligacao ligacoes[], adjustment a)
@@ -117,12 +150,9 @@ static void applyAdjustment(barra barras[], ligacao ligacoes[], adjustment a)
 
 static int assess_operating_point_by_index_fdpf(eps *system, param_fdpf param_FD, unsigned long index, int nAdjusts, adjustment adjustments[])
 {
-
     for (int k = 0; k < system->nB; k++)
     {
-
         system->barras[k].v = system->barras[k].v0;
-        // barras[k].theta = barras[ref].theta;
         system->barras[k].vEsp = system->barras[k].v0;
         system->barras[k].bsh = system->barras[k].bsh0;
         ligacao *lig;
@@ -168,7 +198,6 @@ static int assess_operating_point_by_index_fdpf(eps *system, param_fdpf param_FD
 
     ret_fdpf retorno = fdpf(system, param_FD);
     return retorno.conv;
-
 }
 
 static double fitness_function(unsigned long n)
@@ -185,22 +214,25 @@ double sequence_power_losses(int *sequence)
 {
     double power_losses = 0;
     unsigned long index = 0;
+
     if (data_ps->fitness[index] == 0)
-    {
         data_ps->fitness[index] = fitness_function(index);
-    }
+
+    if (data_ps->visit_count != NULL)
+        data_ps->visit_count[index]++;
+
     power_losses += data_ps->fitness[index];
-    //printf("%lf/n", data_ps->fitness[index]);
 
     for (u_long i = 0; i < data_ps->nAdjustments; i++)
     {
         index = index | ((unsigned long)(1) << sequence[i]);
 
         if (data_ps->fitness[index] == 0)
-        {
             data_ps->fitness[index] = fitness_function(index);
-        }
-        //printf("%lf/n", data_ps->fitness[index]);
+
+        if (data_ps->visit_count != NULL)
+            data_ps->visit_count[index]++;
+
         power_losses += data_ps->fitness[index];
     }
     return power_losses;
