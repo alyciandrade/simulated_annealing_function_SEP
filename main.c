@@ -8,11 +8,17 @@
 
 struct power_system_data *data = NULL;
 
-int main(void)
+int main(int argc, char *argv[])
 {
     int n = power_system_init(ARQ_IEEE_30_BUS, &data);
 
-    srand(time(NULL));
+
+double temp_inicial = atof(argv[1]);
+double temp_final = atof(argv[2]);
+double alpha = atof(argv[3]);
+int seed = atoi(argv[4]); 
+
+srand(seed);
 
     int *sequence = calloc(n, sizeof(int));
 
@@ -44,11 +50,11 @@ int main(void)
     scanf("%d", &contar);
     ps_set_count_visits(contar);
 
-    // roda Simulated Annealing
-    simulated_annealing_power(sequence, n,
-                              5000.0,   // temperatura inicial
-                              0.001,    // temperatura final
-                              0.99);    // alpha
+// roda Simulated Annealing
+simulated_annealing_power(sequence, n,
+                         temp_inicial,   // temperatura inicial
+                          temp_final,    // temperatura final
+                          alpha);    // alpha
 
     double final_losses = sequence_power_losses(sequence);
     printf("Final losses SA: %lf\n", final_losses);
