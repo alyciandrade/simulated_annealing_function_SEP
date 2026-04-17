@@ -11,17 +11,15 @@ struct power_system_data *data = NULL;
 int main(int argc, char *argv[])
 {
     int n = power_system_init(ARQ_IEEE_30_BUS, &data);
-
-
-double temp_inicial = atof(argv[1]);
-double temp_final = atof(argv[2]);
-double alpha = atof(argv[3]);
-int seed = atoi(argv[4]); 
-int iteracoes_por_temp = atoi(argv[5]);
-
-srand(seed);
-
+    double temp_inicial = atof(argv[1]);
+    double temp_final = atof(argv[2]);
+    double alpha = atof(argv[3]);
+    int seed = atoi(argv[4]); 
+    int iteracoes_por_temp = atoi(argv[5]);
     int *sequence = calloc(n, sizeof(int));
+
+    srand(seed);
+
 
     // sequência inicial identidade
     for (int i = 0; i < n; i++)
@@ -53,7 +51,9 @@ srand(seed);
 
     int total_iteracoes;
 
-    clock_t start = clock();
+    struct timespec inicio, fim;
+
+    clock_gettime(CLOCK_MONOTONIC, &inicio);
 
     // roda Simulated Annealing
     total_iteracoes = simulated_annealing_power(sequence, n,
@@ -63,8 +63,8 @@ srand(seed);
                             iteracoes_por_temp);   //iterações 
 
     //mede o tempo de execução do SA
-    clock_t end = clock();
-    double tempo_execucao = (double)(end - start) / CLOCKS_PER_SEC;
+    clock_gettime(CLOCK_MONOTONIC, &fim);
+    double tempo_execucao = (fim.tv_sec - inicio.tv_sec) + (fim.tv_nsec - inicio.tv_nsec) / 1e9;
 
     printf("Tempo de execucao SA: %lf segundos\n", tempo_execucao);
     printf("Total de iteracoes: %d\n", total_iteracoes);
@@ -79,6 +79,7 @@ srand(seed);
 
     double final_losses = sequence_power_losses(sequence);
     printf("Final losses SA: %lf\n", final_losses);
+    
 
     free(sequence);
     power_system_free();
