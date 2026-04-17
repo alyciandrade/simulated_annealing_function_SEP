@@ -21,10 +21,11 @@ static void swap(int *sequence, int i, int j)
     sequence[j] = temp;
 }
 
-void simulated_annealing_power(int *sequence, int n,
-                               double initial_temp,
-                               double final_temp,
-                               double alpha)
+    int simulated_annealing_power(int *sequence, int n,
+                              double initial_temp,
+                              double final_temp,
+                              double alpha,
+                              int iteracoes_por_temperatura)
 {
     double current_cost = sequence_power_losses(sequence);
     double best_cost    = current_cost;
@@ -35,8 +36,12 @@ void simulated_annealing_power(int *sequence, int n,
 
     double T = initial_temp;
 
+    int iteration = 0; 
+
     while (T > final_temp)
     {
+        iteration++;
+
         int i = unif(0, n - 1);
         int j;
         do {
@@ -64,13 +69,16 @@ void simulated_annealing_power(int *sequence, int n,
             swap(sequence, i, j);
         }
 
-        T *= alpha;
+        if (iteration % iteracoes_por_temperatura == 0)
+        {
+            T *= alpha;
+        }
     }
 
     for (int i = 0; i < n; i++)
         sequence[i] = best_sequence[i];
 
-    printf("\nMelhor valor final: %lf\n", best_cost);
-
     free(best_sequence);
+
+    return iteration;
 }

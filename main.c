@@ -17,6 +17,7 @@ double temp_inicial = atof(argv[1]);
 double temp_final = atof(argv[2]);
 double alpha = atof(argv[3]);
 int seed = atoi(argv[4]); 
+int iteracoes_por_temp = atoi(argv[5]);
 
 srand(seed);
 
@@ -50,14 +51,23 @@ srand(seed);
     scanf("%d", &contar);
     ps_set_count_visits(contar);
 
-// roda Simulated Annealing
-simulated_annealing_power(sequence, n,
-                         temp_inicial,   // temperatura inicial
-                          temp_final,    // temperatura final
-                          alpha);    // alpha
+    int total_iteracoes;
 
-    double final_losses = sequence_power_losses(sequence);
-    printf("Final losses SA: %lf\n", final_losses);
+    clock_t start = clock();
+
+    // roda Simulated Annealing
+    total_iteracoes = simulated_annealing_power(sequence, n,
+                            temp_inicial,   // temperatura inicial
+                            temp_final,    // temperatura final
+                            alpha,         // alpha
+                            iteracoes_por_temp);   //iterações 
+
+    //mede o tempo de execução do SA
+    clock_t end = clock();
+    double tempo_execucao = (double)(end - start) / CLOCKS_PER_SEC;
+
+    printf("Tempo de execucao SA: %lf segundos\n", tempo_execucao);
+    printf("Total de iteracoes: %d\n", total_iteracoes);
 
     // exibe resultado da contagem se estiver ativa
     if (contar)
@@ -66,6 +76,9 @@ simulated_annealing_power(sequence, n,
         printf("Estados distintos visitados: %d de %d possiveis\n",
                visited, (int)pow(2, n));
     }
+
+    double final_losses = sequence_power_losses(sequence);
+    printf("Final losses SA: %lf\n", final_losses);
 
     free(sequence);
     power_system_free();

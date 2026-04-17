@@ -1,7 +1,0 @@
-Stagg-5 optimal adjustments:
-
-Losses: 4.2269
-
-Voltage magnitudes:
-   1            1.100000    0.040000
-   2            1.088046    0.058046
