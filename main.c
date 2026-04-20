@@ -16,6 +16,7 @@ int main(int argc, char *argv[])
     double alpha = atof(argv[3]);
     int seed = atoi(argv[4]); 
     int iteracoes_por_temp = atoi(argv[5]);
+    int contar = atoi(argv[6]); 
     int *sequence = calloc(n, sizeof(int));
 
     srand(seed);
@@ -34,19 +35,16 @@ int main(int argc, char *argv[])
     }
 
     // mostra sequência embaralhada
-    printf("\nInitial sequence:\n");
+    /*printf("\nInitial sequence:\n");
     for (int i = 0; i < n; i++)
         printf("%d ", sequence[i]);
-    printf("\n");
+    printf("\n");*/
 
     // calcula valor inicial
-    double initial_losses = sequence_power_losses(sequence);
-    printf("\nInitial losses: %lf\n", initial_losses);
+    /*double initial_losses = sequence_power_losses(sequence);
+    printf("\nInitial losses: %lf\n", initial_losses);*/
 
     // pergunta se quer contar estados visitados
-    int contar;
-    printf("\nDeseja contar estados visitados? (1 = sim, 0 = nao): ");
-    scanf("%d", &contar);
     ps_set_count_visits(contar);
 
     int total_iteracoes;
@@ -66,20 +64,26 @@ int main(int argc, char *argv[])
     clock_gettime(CLOCK_MONOTONIC, &fim);
     double tempo_execucao = (fim.tv_sec - inicio.tv_sec) + (fim.tv_nsec - inicio.tv_nsec) / 1e9;
 
-    printf("Tempo de execucao SA: %lf segundos\n", tempo_execucao);
-    printf("Total de iteracoes: %d\n", total_iteracoes);
+    //printf("Tempo de execucao SA: %lf segundos\n", tempo_execucao);
+    //printf("Total de iteracoes: %d\n", total_iteracoes);
+
+    int visited = 0;
 
     // exibe resultado da contagem se estiver ativa
     if (contar)
     {
-        int visited = ps_count_visited_states();
-        printf("Estados distintos visitados: %d de %d possiveis\n",
-               visited, (int)pow(2, n));
+        visited = ps_count_visited_states();
+        //printf("Estados distintos visitados: %d de %d possiveis\n",
+               //visited, (int)pow(2, n));
     }
 
+
     double final_losses = sequence_power_losses(sequence);
-    printf("Final losses SA: %lf\n", final_losses);
-    
+    //printf("Final losses SA: %lf\n", final_losses);
+
+    printf("\n");
+    printf("seed; temp_inicial; temp_final; alpha; iteracoes_por_temp; final_losses; visited; total_iteracoes; tempo_execucao\n");
+    printf("%d; %lf; %lf; %lf; %d; %lf; %d; %d; %lf\n", seed, temp_inicial, temp_final, alpha, iteracoes_por_temp, final_losses, visited, total_iteracoes, tempo_execucao);
 
     free(sequence);
     power_system_free();
