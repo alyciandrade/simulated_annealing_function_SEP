@@ -40,7 +40,8 @@ int simulated_annealing_power(int *sequence, int n,
                               double initial_temp,
                               double final_temp,
                               double alpha,
-                              int iteracoes_por_temperatura)
+                              int iteracoes_por_temperatura,
+                              int operador)
 {
     double current_cost = sequence_power_losses(sequence);
     double best_cost    = current_cost;
@@ -64,10 +65,16 @@ int simulated_annealing_power(int *sequence, int n,
             j = unif(0, n - 1);
         } while (j == i);
 
-        int operador = rand() % 2;
+        // decide qual operador usar na iteração
+        int op_atual;
+        if (operador == 2)
+            op_atual = rand() % 2;
+        else
+            op_atual = operador;
+
         double new_cost, delta;
 
-        if (operador == 0)
+        if (op_atual == 0)
         {
             // --- SWAP ---
             swap(sequence, i, j);
