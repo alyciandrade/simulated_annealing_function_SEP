@@ -1,7 +1,7 @@
 
 PROGRAMA="./main.exe"
 SAIDA="resultados.csv"
-REPETICOES=2
+REPETICOES=15
 
 echo "seed; temp_inicial; temp_final; alpha; iteracoes_por_temp; operador; final_losses; visited; total_iteracoes; tempo_execucao" > "$SAIDA"
 
