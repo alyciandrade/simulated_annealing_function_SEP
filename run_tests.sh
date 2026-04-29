@@ -11,7 +11,7 @@ for TEMP_INICIAL in 1000 5000 10000; do
             for ITERACOES in 1 10 100; do
                 for OPERADOR in 0 1 2; do
                     for i in $(seq 1 $REPETICOES); do
-                        SEED=$i
+                        SEED=$(date +%H%M%S)
                         echo "T0=$TEMP_INICIAL Tf=$TEMP_FINAL alpha=$ALPHA it=$ITERACOES op=$OPERADOR seed=$SEED..."
                         RESULTADO=$("$PROGRAMA" $TEMP_INICIAL $TEMP_FINAL $ALPHA $SEED $ITERACOES 1 $OPERADOR | tail -n 1)
                         echo "$RESULTADO" >> "$SAIDA"

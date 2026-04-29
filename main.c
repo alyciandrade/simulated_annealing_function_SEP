@@ -17,7 +17,6 @@ int main(int argc, char *argv[])
     int seed = atoi(argv[4]); 
     int iteracoes_por_temp = atoi(argv[5]);
     int contar = atoi(argv[6]); 
-    int operador = atoi(argv[7]);
     int *sequence = calloc(n, sizeof(int));
 
     srand(seed);
@@ -59,8 +58,7 @@ int main(int argc, char *argv[])
                             temp_inicial,   // temperatura inicial
                             temp_final,    // temperatura final
                             alpha,         // alpha
-                            iteracoes_por_temp, //iterações 
-                            operador);   //swap ou insert
+                            iteracoes_por_temp);   //iterações 
 
     //mede o tempo de execução do SA
     clock_gettime(CLOCK_MONOTONIC, &fim);
@@ -84,9 +82,8 @@ int main(int argc, char *argv[])
     //printf("Final losses SA: %lf\n", final_losses);
 
     printf("\n");
-    printf("seed; temp_inicial; temp_final; alpha; iteracoes_por_temp; operador; final_losses; visited; total_iteracoes; tempo_execucao\n");
-    printf("%d; %lf; %lf; %lf; %d; %d; %lf; %d; %d; %lf\n",
-        seed, temp_inicial, temp_final, alpha, iteracoes_por_temp, operador, final_losses, visited, total_iteracoes, tempo_execucao);
+    printf("seed; temp_inicial; temp_final; alpha; iteracoes_por_temp; final_losses; visited; total_iteracoes; tempo_execucao\n");
+    printf("%d; %lf; %lf; %lf; %d; %lf; %d; %d; %lf\n", seed, temp_inicial, temp_final, alpha, iteracoes_por_temp, final_losses, visited, total_iteracoes, tempo_execucao);
 
     free(sequence);
     power_system_free();
