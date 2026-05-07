@@ -1,11 +1,11 @@
 
 PROGRAMA="./main.exe"
-SAIDA="resultados.csv"
-REPETICOES=15
+SAIDA="resultados1.csv"
+REPETICOES=1
 
 echo "seed; temp_inicial; temp_final; alpha; iteracoes_por_temp; operador; final_losses; visited; total_iteracoes; tempo_execucao" > "$SAIDA"
 
-for TEMP_INICIAL in 1000 5000 10000; do
+for TEMP_INICIAL in 500 1000 10000; do
     for TEMP_FINAL in 0.1 0.01 0.001; do
         for ALPHA in 0.90 0.95 0.99; do
             for ITERACOES in 1 10 100; do
