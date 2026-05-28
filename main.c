@@ -10,7 +10,7 @@ struct power_system_data *data = NULL;
 
 int main(int argc, char *argv[])
 {
-    int n = power_system_init(ARQ_IEEE_30_BUS, &data);
+    int n = power_system_init(ARQ_IEEE_57_BUS, &data);
     double temp_inicial = atof(argv[1]);
     double temp_final = atof(argv[2]);
     double alpha = atof(argv[3]);
@@ -87,6 +87,9 @@ int main(int argc, char *argv[])
     printf("\n");
     printf("seed; temp_inicial; temp_final; alpha; iteracoes_por_temp; operador; final_losses; visited; total_iteracoes; tempo_execucao\n");
     printf("%lld; %lf; %lf; %lf; %d; %d; %lf; %d; %d; %lf\n", seed, temp_inicial, temp_final, alpha, iteracoes_por_temp, operador, final_losses, visited, total_iteracoes, tempo_execucao);
+
+    export_visit_count_csv("visitacoes.csv");
+    export_fitness_count_csv("fitness.csv");
 
     free(sequence);
     power_system_free();

@@ -18,4 +18,7 @@ void ps_set_count_visits(int count_visits); //Ativa ou desativa a contagem de vi
  Retorna -1 se a contagem estiver desativada.*/
 int ps_count_visited_states(void); 
 
+void export_visit_count_csv(const char *filename);
+void export_fitness_count_csv(const char *filename);
+
 #endif 
