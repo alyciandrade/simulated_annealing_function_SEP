@@ -41,7 +41,8 @@ int simulated_annealing_power(int *sequence, int n,
                               double final_temp,
                               double alpha,
                               int iteracoes_por_temperatura,
-                              int operador)
+                              int operador,
+                              int log_ativo)
 {
     double current_cost = sequence_power_losses(sequence);
     double best_cost    = current_cost;
@@ -55,6 +56,13 @@ int simulated_annealing_power(int *sequence, int n,
     double T = initial_temp;
     int iteration = 0;
 
+    FILE *log = NULL;
+    if (log_ativo)
+    {
+        log = fopen("log_iteracoes.csv", "w");
+        fprintf(log, "iteracao; current_cost; best_cost; temperatura\n");
+    }
+
     while (T > final_temp)
     {
         iteration++;
@@ -65,7 +73,6 @@ int simulated_annealing_power(int *sequence, int n,
             j = unif(0, n - 1);
         } while (j == i);
 
-        // decide qual operador usar na iteração
         int op_atual;
         if (operador == 2)
             op_atual = rand() % 2;
@@ -76,7 +83,6 @@ int simulated_annealing_power(int *sequence, int n,
 
         if (op_atual == 0)
         {
-            // --- SWAP ---
             swap(sequence, i, j);
             new_cost = sequence_power_losses(sequence);
             delta    = new_cost - current_cost;
@@ -84,6 +90,7 @@ int simulated_annealing_power(int *sequence, int n,
             if (delta < 0 || exp(-delta / T) > rando())
             {
                 current_cost = new_cost;
+    
                 if (current_cost < best_cost)
                 {
                     best_cost = current_cost;
@@ -96,7 +103,6 @@ int simulated_annealing_power(int *sequence, int n,
         }
         else
         {
-            // --- INSERT ---
             memcpy(backup, sequence, n * sizeof(int));
             insert(sequence, n, i, j);
             new_cost = sequence_power_losses(sequence);
@@ -105,6 +111,7 @@ int simulated_annealing_power(int *sequence, int n,
             if (delta < 0 || exp(-delta / T) > rando())
             {
                 current_cost = new_cost;
+            
                 if (current_cost < best_cost)
                 {
                     best_cost = current_cost;
@@ -116,9 +123,16 @@ int simulated_annealing_power(int *sequence, int n,
                 memcpy(sequence, backup, n * sizeof(int));
         }
 
+        if (log_ativo)
+            fprintf(log, "%d; %lf; %lf; %lf\n",
+                iteration, current_cost, best_cost, T);
+
         if (iteration % iteracoes_por_temperatura == 0)
             T *= alpha;
     }
+
+    if (log_ativo)
+        fclose(log);
 
     for (int i = 0; i < n; i++)
         sequence[i] = best_sequence[i];

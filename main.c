@@ -18,6 +18,7 @@ int main(int argc, char *argv[])
     int iteracoes_por_temp = atoi(argv[5]);
     int contar = atoi(argv[6]); 
     int operador = atoi(argv[7]); 
+    int log_ativo = atoi(argv[8]);
     int *sequence = calloc(n, sizeof(int));
 
 
@@ -60,9 +61,10 @@ int main(int argc, char *argv[])
                             temp_inicial,   // temperatura inicial
                             temp_final,    // temperatura final
                             alpha,         // alpha
-                            iteracoes_por_temp,
-                            operador);   //iterações 
-
+                            iteracoes_por_temp, //iterações 
+                            operador,
+                            log_ativo);  
+                             
     //mede o tempo de execução do SA
     clock_gettime(CLOCK_MONOTONIC, &fim);
     double tempo_execucao = (fim.tv_sec - inicio.tv_sec) + (fim.tv_nsec - inicio.tv_nsec) / 1e9;

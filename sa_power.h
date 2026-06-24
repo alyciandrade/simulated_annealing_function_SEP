@@ -6,6 +6,7 @@ int simulated_annealing_power(int *sequence, int n,
                               double final_temp,
                               double alpha,
                               int iteracoes_por_temperatura,
-                              int operador);
-                              
+                              int operador,
+                              int log_ativo);
+
 #endif

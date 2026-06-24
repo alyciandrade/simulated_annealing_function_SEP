@@ -215,6 +215,9 @@ double sequence_power_losses(int *sequence)
     double power_losses = 0;
     unsigned long index = 0;
 
+    //ISSO OBRIGA A RECALCULAR O VALOR DO PONTO DE NOVO
+    data_ps->fitness[index] = 0;
+
     if (data_ps->fitness[index] == 0)
         data_ps->fitness[index] = fitness_function(index);
 
@@ -226,6 +229,9 @@ double sequence_power_losses(int *sequence)
     for (u_long i = 0; i < data_ps->nAdjustments; i++)
     {
         index = index | ((unsigned long)(1) << sequence[i]);
+
+        //ISSO OBRIGA A RECALCULAR O VALOR DO PONTO DE NOVO
+        data_ps->fitness[index] = 0;
 
         if (data_ps->fitness[index] == 0)
             data_ps->fitness[index] = fitness_function(index);
