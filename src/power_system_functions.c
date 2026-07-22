@@ -7,7 +7,6 @@
 #include <libeps.h>
 #include <assert.h>
 #include "power_system_functions.h"
-
 #include <stdio.h>
 
 #define PENALTY_FACTOR 1E9
@@ -242,4 +241,59 @@ double sequence_power_losses(int *sequence)
         power_losses += data_ps->fitness[index];
     }
     return power_losses;
+}
+
+
+static void print_binary(FILE *fp, unsigned long num, int bits)
+{
+    for (int i = bits - 1; i >= 0; i--)
+    {
+        fprintf(fp, "%lu", (num >> i) & 1UL);
+    }
+}
+
+void export_visit_count_csv(const char *filename)
+{
+    FILE *fp = fopen(filename, "w");
+
+    if (fp == NULL)
+    {
+        printf("Erro ao abrir CSV.\n");
+        return;
+    }
+
+    fprintf(fp, "Estado,Visitas\n");
+
+    unsigned long total_states = 1UL << data_ps->nAdjustments;
+
+    for (unsigned long i = 0; i < total_states; i++)
+    {
+        print_binary(fp, i, data_ps->nAdjustments);
+
+        fprintf(fp, ",%lu\n", data_ps->visit_count[i]);
+    }
+
+    fclose(fp);
+
+    printf("CSV gerado: %s\n", filename);
+}
+
+
+void export_fitness_count_csv(const char *filename)
+{
+    FILE *fp = fopen(filename, "w");
+    if (fp == NULL)
+    {
+        printf("Erro ao abrir CSV.\n");
+        return;
+    }
+    fprintf(fp, "Estado,Fitness\n");
+    unsigned long total_states = 1UL << data_ps->nAdjustments;
+    for (unsigned long i = 0; i < total_states; i++)
+    {
+        print_binary(fp, i, data_ps->nAdjustments);
+        fprintf(fp, ",%.6f\n", data_ps->fitness[i]);
+    }
+    fclose(fp);
+    printf("CSV gerado: %s\n", filename);
 }

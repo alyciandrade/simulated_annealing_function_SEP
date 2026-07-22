@@ -5,10 +5,10 @@ REPETICOES=20
 
 echo "seed; temp_inicial; temp_final; alpha; iteracoes_por_temp; operador; final_losses; visited; total_iteracoes; tempo_execucao" > "$SAIDA"
 
-for TEMP_INICIAL in 1000 2500 5000; do
+for TEMP_INICIAL in 500 1000 2500; do
     for TEMP_FINAL in 0.001; do
-        for ALPHA in 0.975; do
-            for ITERACOES in 10; do
+        for ALPHA in 0.95 0.975 0.99; do
+            for ITERACOES in 1 10; do
                 for OPERADOR in 1 2; do
                     for i in $(seq 1 $REPETICOES); do
                         SEED=$(( $(date +%s%N) % 2147483647 ))
