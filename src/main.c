@@ -10,7 +10,7 @@ struct power_system_data *data = NULL;
 
 int main(int argc, char *argv[])
 {
-    int n = power_system_init(ARQ_IEEE_30_BUS, &data);
+    int n = power_system_init(ARQ_IEEE_57_BUS, &data);
     double temp_inicial = atof(argv[1]);
     double temp_final = atof(argv[2]);
     double alpha = atof(argv[3]);

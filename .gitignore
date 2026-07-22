@@ -1,3 +1,13 @@
+# Compilação
 *.exe
 *.o
-*.csv
+build/
+
+# Resultados (gerados pela execução)
+results/*.csv
+
+# Jupyter
+notebooks/.ipynb_checkpoints/
+
+# Temporários
+*.stackdump

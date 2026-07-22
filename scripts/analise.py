@@ -1,6 +1,6 @@
 import pandas as pd
 
-df = pd.read_csv('resultados_total.csv', sep=';', skipinitialspace=True)
+df = pd.read_csv('../results/resultado_total_57_barras.csv', sep=';', skipinitialspace=True)
 
 colunas_resultado = ['final_losses', 'visited', 'total_iteracoes', 'tempo_execucao']
 
@@ -12,6 +12,6 @@ resultado.columns = ['_'.join(c) for c in resultado.columns]
 
 resultado = resultado.sort_values('final_losses_mean')
 
-resultado.to_csv('media_desvio_total.csv', sep=';')
+resultado.to_csv('../results/ranking_57.csv', sep=';')
 
-print("Salvo em media_desvio_total.csv")
+print("Salvo em results/ranking_57.csv")

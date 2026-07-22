@@ -1,6 +1,6 @@
 
-PROGRAMA="./main.exe"
-SAIDA="resultados.csv"
+PROGRAMA="../main.exe"
+SAIDA="../results/resultados.csv"
 REPETICOES=20
 
 echo "seed; temp_inicial; temp_final; alpha; iteracoes_por_temp; operador; final_losses; visited; total_iteracoes; tempo_execucao" > "$SAIDA"
@@ -13,7 +13,7 @@ for TEMP_INICIAL in 1000 2500 5000; do
                     for i in $(seq 1 $REPETICOES); do
                         SEED=$(( $(date +%s%N) % 2147483647 ))
                         echo "T0=$TEMP_INICIAL Tf=$TEMP_FINAL alpha=$ALPHA it=$ITERACOES op=$OPERADOR seed=$SEED..."
-                        RESULTADO=$("$PROGRAMA" $TEMP_INICIAL $TEMP_FINAL $ALPHA $SEED $ITERACOES 1 $OPERADOR | tail -n 1)
+                        RESULTADO=$("$PROGRAMA" $TEMP_INICIAL $TEMP_FINAL $ALPHA $SEED $ITERACOES 1 $OPERADOR 0 | tail -n 1)
                         echo "$RESULTADO" >> "$SAIDA"
                     done
                 done

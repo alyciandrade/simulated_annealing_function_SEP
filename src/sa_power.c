@@ -55,12 +55,13 @@ int simulated_annealing_power(int *sequence, int n,
 
     double T = initial_temp;
     int iteration = 0;
+    int visited_states = 0;
 
     FILE *log = NULL;
     if (log_ativo)
     {
-        log = fopen("log_iteracoes.csv", "w");
-        fprintf(log, "iteracao; current_cost; best_cost; temperatura\n");
+        log = fopen("results/log_iteracoes.csv", "w");
+        fprintf(log, "iteracao; current_cost; best_cost; temperatura; visited_states\n");
     }
 
     while (T > final_temp)
@@ -90,7 +91,8 @@ int simulated_annealing_power(int *sequence, int n,
             if (delta < 0 || exp(-delta / T) > rando())
             {
                 current_cost = new_cost;
-    
+                visited_states++;
+
                 if (current_cost < best_cost)
                 {
                     best_cost = current_cost;
@@ -111,7 +113,8 @@ int simulated_annealing_power(int *sequence, int n,
             if (delta < 0 || exp(-delta / T) > rando())
             {
                 current_cost = new_cost;
-            
+                visited_states++;
+
                 if (current_cost < best_cost)
                 {
                     best_cost = current_cost;
@@ -124,8 +127,8 @@ int simulated_annealing_power(int *sequence, int n,
         }
 
         if (log_ativo)
-            fprintf(log, "%d; %lf; %lf; %lf\n",
-                iteration, current_cost, best_cost, T);
+            fprintf(log, "%d; %lf; %lf; %lf; %d\n",
+                iteration, current_cost, best_cost, T, visited_states);
 
         if (iteration % iteracoes_por_temperatura == 0)
             T *= alpha;
